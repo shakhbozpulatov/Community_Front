@@ -8,19 +8,25 @@
           <p class="text">Already have an account?</p>
           <router-link to="#"><p class="text-login">Log in</p></router-link>
         </div>
-        <form class="form">
+        <form @submit.prevent="loginSubmit" class="form">
           <div class="names-group">
             <div class="row">
               <div class="col-md-4">
                 <div class="label-input-wrapper">
                   <label for="first-name">First name*</label>
-                  <input type="text" id="first-name" placeholder="Your name" />
+                  <input
+                    v-model="registerData.name"
+                    type="text"
+                    id="first-name"
+                    placeholder="Your name"
+                  />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="label-input-wrapper">
                   <label for="first-name">Last name*</label>
                   <input
+                    v-model="registerData.surname"
                     type="text"
                     id="first-name"
                     placeholder="Your surname"
@@ -39,13 +45,19 @@
               <div class="col-md-4">
                 <div class="label-input-wrapper">
                   <label for="first-name">Email*</label>
-                  <input type="email" id="first-name" placeholder="Email" />
+                  <input
+                    v-model="registerData.email"
+                    type="email"
+                    id="first-name"
+                    placeholder="Email"
+                  />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="label-input-wrapper">
                   <label for="first-name">Password*</label>
                   <input
+                    v-model="registerData.password"
                     type="password"
                     id="first-name"
                     placeholder="Password"
@@ -55,7 +67,11 @@
               <div class="col-md-4">
                 <div class="label-input-wrapper">
                   <label for="date">Company name*</label>
-                  <input type="text" placeholder="Company name" />
+                  <input
+                    v-model="registerData.company_name"
+                    type="text"
+                    placeholder="Company name"
+                  />
                 </div>
               </div>
             </div>
@@ -72,11 +88,40 @@
 import axios from "axios";
 export default {
   data() {
-    return {};
+    return {
+      registerData: {
+        firstname: null,
+        surname: null,
+        email: null,
+        password: null,
+        company_name: null,
+        // birthday: null,
+      },
+    };
   },
   methods: {
     loginSubmit() {
-      axios.post("/api/login/");
+      axios
+        .post("http://localhost:5000/api/superuser/", {
+          name: this.registerData.name,
+          surname: this.registerData.surname,
+          email: this.registerData.email,
+          password: this.registerData.password,
+          company_name: this.registerData.company_name,
+          // birthday: this.registerData.birthday,
+        })
+        .then((res) => {
+          console.log("superuser", res);
+          this.registerData.name = null;
+          this.registerData.surname = null;
+          this.registerData.email = null;
+          this.registerData.password = null;
+          this.registerData.company_name = null;
+          this.registerData.birthday = null;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 };
@@ -95,38 +140,6 @@ body {
 .register {
   background: #f4f8fa;
   height: 100vh;
-  // .header {
-  //   padding: 8px 0;
-  //   background: #ffffff;
-  //   .container {
-  //     display: flex;
-  //     justify-content: space-between;
-  //     align-items: center;
-  //     .navbar-list {
-  //       display: flex;
-  //       align-items: center;
-  //       gap: 50px;
-  //       margin: 0;
-  //       padding: 0;
-  //       &__item {
-  //         a {
-  //           font-family: Poppins, sans-serif;
-  //           font-size: 14px;
-  //           line-height: 19px;
-  //           color: rgba(0, 0, 0, 0.85);
-  //         }
-  //         button {
-  //           background: #ffffff;
-  //           font-family: Poppins, sans-serif;
-  //           font-size: 14px;
-  //           line-height: 19px;
-  //           color: rgba(0, 0, 0, 0.65);
-  //           border: 1px solid #d9d9d9;
-  //         }
-  //       }
-  //     }
-  //   }
-  // }
   .form-section {
     padding-top: 40px;
     .card {
@@ -222,7 +235,6 @@ body {
             input[type="radio"] {
               width: 20px;
               margin-right: 10px;
-              // appearance: none;
             }
           }
         }
