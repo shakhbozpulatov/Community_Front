@@ -1,27 +1,5 @@
 <template>
   <div class="register">
-    <!-- <header class="header">
-      <div class="container">
-        <div class="logo">
-          <img src="@/assets/images/logo.svg" alt="" />
-        </div>
-        <ul class="navbar-list">
-          <li class="navbar-list__item"><a href="">Services</a></li>
-          <li class="navbar-list__item"><a href="">About </a></li>
-          <li class="navbar-list__item"><a href="">Contacts</a></li>
-          <li class="navbar-list__item">
-            <router-link to="#">
-              <button>Log in</button>
-            </router-link>
-          </li>
-          <li class="navbar-list__item">
-            <router-link to="#">
-              <button>Eng</button>
-            </router-link>
-          </li>
-        </ul>
-      </div>
-    </header> -->
     <section class="form-section">
       <div class="card">
         <img class="logo-img" src="@/assets/images/logo.svg" alt="" />
@@ -84,36 +62,6 @@
             <div class="btn-group mt-4">
               <button class="button" type="submit">Submit</button>
             </div>
-            <!-- <div class="gender-wrapper mt-3 bg-gray-600">
-              <div class="row">
-                <label>Gender</label>
-                <div class="row">
-                  <div class="col-md-6">
-                    <label class="radio-label" for="radio1">
-                      <input
-                        class="mr-5"
-                        type="radio"
-                        id="radio1"
-                        name="radio"
-                      />
-                      Male
-                    </label>
-                  </div>
-                  <div class="col-md-6">
-                    <label for="radio2" class="radio-label">
-                      <input
-                        class="mr-5"
-                        type="radio"
-                        id="radio2"
-                        name="radio"
-                      />
-                      Female
-                    </label>
-                  </div>
-                </div>
-                <div class="col-md-6"></div>
-              </div>
-            </div> -->
           </div>
         </form>
       </div>
