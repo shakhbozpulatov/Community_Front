@@ -31,7 +31,7 @@
           <div>
             <h3 class="title">Hello Again!</h3>
             <p class="text">Welcome Back</p>
-            <form class="form">
+            <form @submit.prevent="loginSubmit" class="form">
               <div class="input-wrapper">
                 <svg
                   class="svg"
@@ -50,7 +50,12 @@
                     />
                   </g>
                 </svg>
-                <input class="input" placeholder="Email Address" type="email" />
+                <input
+                  v-model="loginData.email"
+                  class="input"
+                  placeholder="Email Address"
+                  type="email"
+                />
               </div>
               <div class="input-wrapper">
                 <svg
@@ -68,10 +73,15 @@
                     />
                   </g>
                 </svg>
-                <input class="input" placeholder="Password" type="password" />
+                <input
+                  v-model="loginData.password"
+                  class="input"
+                  placeholder="Password"
+                  type="password"
+                />
               </div>
               <div class="btn-group">
-                <button class="button">Login</button>
+                <button class="button" type="submit">Login</button>
                 <a href="#"><p class="text">Forgot Password</p> </a>
               </div>
             </form>
@@ -83,8 +93,32 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Home",
+  data() {
+    return {
+      loginData: {
+        email: null,
+        password: null,
+      },
+    };
+  },
+  methods: {
+    loginSubmit() {
+      axios
+        .post("http://localhost:5000/api/login/", {
+          email: this.loginData.email,
+          password: this.loginData.password,
+        })
+        .then((res) => {
+          console.log("loginData", res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+  },
 };
 </script>
 <style lang="scss">
