@@ -17,7 +17,6 @@
                   <input
                     v-model="registerData.name"
                     type="text"
-                    id="first-name"
                     placeholder="Your name"
                   />
                 </div>
@@ -28,7 +27,6 @@
                   <input
                     v-model="registerData.surname"
                     type="text"
-                    id="first-name"
                     placeholder="Your surname"
                   />
                 </div>
@@ -48,7 +46,6 @@
                   <input
                     v-model="registerData.email"
                     type="email"
-                    id="first-name"
                     placeholder="Email"
                   />
                 </div>
@@ -59,7 +56,6 @@
                   <input
                     v-model="registerData.password"
                     type="password"
-                    id="first-name"
                     placeholder="Password"
                   />
                 </div>
@@ -117,7 +113,10 @@ export default {
           this.registerData.email = null;
           this.registerData.password = null;
           this.registerData.company_name = null;
-          this.registerData.birthday = null;
+          // this.registerData.birthday = null;
+          if (res.statusText == "OK") {
+            this.$router.push("/dashboard");
+          }
         })
         .catch((err) => {
           console.log(err);
