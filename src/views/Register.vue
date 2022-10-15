@@ -115,7 +115,7 @@ export default {
           this.registerData.company_name = null;
           // this.registerData.birthday = null;
           if (res.statusText == "OK") {
-            this.$router.push("/dashboard");
+            this.$router.push("/");
           }
         })
         .catch((err) => {

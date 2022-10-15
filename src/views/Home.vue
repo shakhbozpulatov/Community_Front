@@ -113,10 +113,10 @@ export default {
         })
         .then((res) => {
           console.log("loginData", res);
-          this.$store.state.superUser = res.data;
-          this.$router.push("/dashboard");
+          this.$store.state.superUser = res.data.user;
+          this.$store.state.token = res.data.token;
           localStorage.setItem("token", res.data.token);
-          console.log(res.headers);
+          this.$router.push("/");
         })
         .catch((err) => {
           console.log(err);

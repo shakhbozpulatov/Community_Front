@@ -7,6 +7,7 @@ import "./assets/css/tailwind.css";
 import vuetify from "@/plugins/vuetify";
 import "vuetify/dist/vuetify.min.css";
 import Vuetify from "vuetify";
+import VueAnimateNumber from "vue-animate-number";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
@@ -14,6 +15,7 @@ import "bootstrap-vue/dist/bootstrap-vue.css";
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Vuetify);
+Vue.use(VueAnimateNumber);
 
 Vue.config.productionTip = false;
 
