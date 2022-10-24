@@ -8,6 +8,7 @@ import vuetify from "@/plugins/vuetify";
 import "vuetify/dist/vuetify.min.css";
 import Vuetify from "vuetify";
 import VueAnimateNumber from "vue-animate-number";
+import "vue-material-design-icons/styles.css";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";

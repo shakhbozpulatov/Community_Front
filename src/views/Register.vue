@@ -98,7 +98,7 @@ export default {
   methods: {
     loginSubmit() {
       axios
-        .post("http://localhost:5000/api/superuser/", {
+        .post("http://localhost:5000/api/superuser/register/", {
           name: this.registerData.name,
           surname: this.registerData.surname,
           email: this.registerData.email,

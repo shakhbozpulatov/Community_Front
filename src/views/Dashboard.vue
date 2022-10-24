@@ -11,10 +11,10 @@
             mt-1
           "
         >
-          <h3 class="m-0">Hello Durdona👋🏼</h3>
+          <h3 class="m-0">Hello Mbappe👋🏼</h3>
           <div class="input-wrap">
             <img src="../assets/images/icon-search.svg" alt="" />
-            <input type="search" class="bg-white" placeholder="Search" />
+            <input type="text" class="bg-white" placeholder="Search" />
           </div>
         </div>
 
@@ -82,9 +82,9 @@
           ></v-data-table>
         </div>
       </div>
-      <!-- <v-btn color="red lighten-2" class="m-3" dark @click="dialog = true">
+      <v-btn color="red lighten-2" class="m-3" dark @click="dialog = true">
         Add Stuff
-      </v-btn> -->
+      </v-btn>
 
       <!-- {{ newStaff }} -->
     </template>
@@ -303,7 +303,7 @@ export default {
     postNewStaffData() {
       let token = localStorage.getItem("token");
       console.log("token: ", token);
-      console.log("_id: ", this.newStaff._id);
+      console.log("_id: ", this.newStaff);
       axios
         .post(
           `http://localhost:5000/api/addstaff/${this.newStaff._id}`,

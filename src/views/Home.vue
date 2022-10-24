@@ -107,21 +107,25 @@ export default {
   methods: {
     loginSubmit() {
       axios
-        .post("http://localhost:5000/api/login/", {
+        .post("http://localhost:5000/api/user/login/", {
           email: this.loginData.email,
           password: this.loginData.password,
         })
         .then((res) => {
           console.log("loginData", res);
-          this.$store.state.superUser = res.data.user;
+          this.$store.state.superUser = res.data.data;
           this.$store.state.token = res.data.token;
           localStorage.setItem("token", res.data.token);
           this.$router.push("/");
+          this.$root.$refs.App.sidebar = true;
         })
         .catch((err) => {
           console.log(err);
         });
     },
+  },
+  created() {
+    this.$root.$refs.App.sidebar = false;
   },
 };
 </script>
