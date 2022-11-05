@@ -145,7 +145,6 @@ export default {
         company_name: null,
       },
       registerUserData: {
-        name: null,
         username: null,
         email: null,
         password: null,
