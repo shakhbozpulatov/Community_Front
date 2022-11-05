@@ -3,19 +3,31 @@
     <section class="form-section">
       <div class="card">
         <img class="logo-img" src="@/assets/images/logo.svg" alt="" />
-        <h3 class="title">Welcome to ByTrend!</h3>
+        <h3 class="title">Welcome to Community!</h3>
         <div class="d-flex justify-content-center flex">
           <p class="text">Already have an account?</p>
-          <router-link to="#"><p class="text-login">Log in</p></router-link>
+          <router-link to="/login"
+            ><p class="text-login">Log in</p></router-link
+          >
         </div>
         <form @submit.prevent="loginSubmit" class="form">
           <div class="names-group">
             <div class="row">
               <div class="col-md-4">
                 <div class="label-input-wrapper">
-                  <label for="first-name">First name*</label>
+                  <label for="date">Position*</label>
+                  <select v-model="position" class="form-input">
+                    <option value="admin">Admin</option>
+                    <option selected value="user">User</option>
+                  </select>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="label-input-wrapper">
+                  <label for="first-name">Name*</label>
                   <input
-                    v-model="registerData.name"
+                    class="form-input"
+                    v-model="registerAdminData.name"
                     type="text"
                     placeholder="Your name"
                   />
@@ -23,18 +35,13 @@
               </div>
               <div class="col-md-4">
                 <div class="label-input-wrapper">
-                  <label for="first-name">Last name*</label>
+                  <label for="first-name">Username*</label>
                   <input
-                    v-model="registerData.surname"
+                    class="form-input"
+                    v-model="registerAdminData.username"
                     type="text"
-                    placeholder="Your surname"
+                    placeholder="Your username"
                   />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="label-input-wrapper">
-                  <label for="date">Birth date*</label>
-                  <input type="date" name="date" id="date" />
                 </div>
               </div>
             </div>
@@ -44,7 +51,8 @@
                 <div class="label-input-wrapper">
                   <label for="first-name">Email*</label>
                   <input
-                    v-model="registerData.email"
+                    class="form-input"
+                    v-model="registerAdminData.email"
                     type="email"
                     placeholder="Email"
                   />
@@ -54,7 +62,8 @@
                 <div class="label-input-wrapper">
                   <label for="first-name">Password*</label>
                   <input
-                    v-model="registerData.password"
+                    class="form-input"
+                    v-model="registerAdminData.password"
                     type="password"
                     placeholder="Password"
                   />
@@ -62,16 +71,57 @@
               </div>
               <div class="col-md-4">
                 <div class="label-input-wrapper">
-                  <label for="date">Company name*</label>
+                  <label for="first-name">Confirmation Password*</label>
                   <input
-                    v-model="registerData.company_name"
-                    type="text"
-                    placeholder="Company name"
+                    class="form-input"
+                    v-model="registerAdminData.password_confirmation"
+                    type="password"
+                    placeholder="Password"
                   />
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-6">
+                  <div v-if="position == 'admin'" class="label-input-wrapper">
+                    <label for="date">Company name*</label>
+                    <input
+                      class="form-input"
+                      v-model="registerAdminData.company_name"
+                      type="text"
+                      placeholder="Company name"
+                    />
+                  </div>
+                  <div v-else class="label-input-wrapper">
+                    <label for="date">Company id*</label>
+                    <input
+                      class="form-input"
+                      v-model="registerAdminData.companyId"
+                      type="text"
+                      placeholder="Company id"
+                    />
+                  </div>
+                </div>
+                <div v-if="position == 'user'" class="col-md-6">
+                  <div class="label-input-wrapper">
+                    <label for="date">Occupation*</label>
+                    <select
+                      v-model="registerUserData.occupation"
+                      class="form-input"
+                    >
+                      <option selected value="Front Ender">Front Ender</option>
+                      <option value="Back Ender">Back Ender</option>
+                      <option value="Full Stack">Full Stack</option>
+                      <option value="PM">PM</option>
+                      <option value="Graphic Designer">Graphic Designer</option>
+                      <option value="SMM">SMM</option>
+                      <option value="Marketolog">Marketolog</option>
+                      <option value="Marketolog">Devops</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="btn-group mt-4">
+            <div class="btn-group mt-7">
               <button class="button" type="submit">Submit</button>
             </div>
           </div>
@@ -85,35 +135,46 @@ import axios from "axios";
 export default {
   data() {
     return {
-      registerData: {
-        firstname: null,
-        surname: null,
+      position: "user",
+      registerAdminData: {
+        name: null,
+        username: null,
         email: null,
         password: null,
+        password_confirmation: null,
         company_name: null,
-        // birthday: null,
       },
+      registerUserData: {
+        name: null,
+        username: null,
+        email: null,
+        password: null,
+        password_confirmation: null,
+        occupation: null,
+      }
     };
   },
   methods: {
     loginSubmit() {
       axios
-        .post("http://localhost:5000/api/superuser/register/", {
-          name: this.registerData.name,
-          surname: this.registerData.surname,
-          email: this.registerData.email,
-          password: this.registerData.password,
-          company_name: this.registerData.company_name,
-          // birthday: this.registerData.birthday,
+        .post("http://localhost:5000/api/admins/register/", {
+          name: this.registerAdminData.name,
+          username: this.registerAdminData.username,
+          email: this.registerAdminData.email,
+          password: this.registerAdminData.password,
+          password_confirmation: this.registerAdminData.password_confirmation,
+          company_name: this.registerAdminData.company_name,
+          occupation: this.registerAdminData.occupation,
         })
         .then((res) => {
-          console.log("superuser", res);
-          this.registerData.name = null;
-          this.registerData.surname = null;
-          this.registerData.email = null;
-          this.registerData.password = null;
-          this.registerData.company_name = null;
-          // this.registerData.birthday = null;
+          console.log("admins", res);
+          this.registerAdminData.name = null;
+          this.registerAdminData.username = null;
+          this.registerAdminData.email = null;
+          this.registerAdminData.password = null;
+          this.registerAdminData.password_confirmation = null;
+          this.registerAdminData.company_name = null;
+          this.registerAdminData.occupation = null;
           if (res.statusText == "OK") {
             this.$router.push("/");
           }
@@ -140,13 +201,13 @@ body {
   background: #f4f8fa;
   height: 100vh;
   .form-section {
-    padding-top: 40px;
+    padding-top: 7px;
     .card {
       background: #ffffff;
       box-shadow: 0px 12px 16px rgba(0, 0, 0, 0.04),
         0px 4px 56px rgba(0, 0, 0, 0.04);
       border-radius: 10px;
-      padding: 40px;
+      padding: 30px;
       max-width: 896px;
       margin: 0 auto;
       text-align: center;
@@ -161,7 +222,7 @@ body {
         font-size: 29px;
         line-height: 39px;
         color: rgba(0, 0, 0, 0.85);
-        margin: 24px 0 16px;
+        margin: 4px 0;
       }
       .text,
       .text-login {
@@ -169,7 +230,7 @@ body {
         font-size: 16px;
         line-height: 26px;
         color: #444150;
-        margin-bottom: 56px;
+        margin-bottom: 26px;
       }
       .text-login {
         color: #01bab3;
@@ -179,7 +240,7 @@ body {
       .form {
         text-align: left;
         .names-group {
-          margin-bottom: 24px;
+          margin-bottom: 14px;
           gap: 16px;
           label {
             font-family: Poppins, sans-serif;
@@ -189,7 +250,7 @@ body {
             color: #444150;
             display: block;
           }
-          input {
+          .form-input {
             background: #ffffff;
             border: 1px solid #d9d9d9;
             box-sizing: border-box;
