@@ -45,53 +45,68 @@
                 </v-tabs>
 
                 <v-tabs-items v-model="tab">
-                  <v-tab-item v-for="item in items" :key="item">
+                  <v-tab-item>
                     <v-card color="basil">
                       <v-card-text>
-                        <form @submit.prevent="loginSubmit" class="form">
+                        <form @submit.prevent="loginAdminSubmit" class="form">
                           <div class="input-wrapper">
-                            <svg
-                              class="svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g opacity="0.3">
-                                <path
-                                  fill-rule="evenodd"
-                                  clip-rule="evenodd"
-                                  d="M1.5 5.25L2.25 4.5H21.75L22.5 5.25V18.75L21.75 19.5H2.25L1.5 18.75V5.25ZM3 6.8025V18H21V6.804L12.465 13.35H11.55L3 6.8025ZM19.545 6H4.455L12 11.8035L19.545 6Z"
-                                  fill="#333333"
-                                />
-                              </g>
-                            </svg>
+                            <v-icon class="svg" right>
+                              mdi-account-check
+                            </v-icon>
                             <input
-                              v-model="loginData.email"
+                              v-model="loginAdminData.username"
                               class="input"
-                              placeholder="Email Address"
-                              type="email"
+                              placeholder="Username"
+                              type="text"
                             />
                           </div>
                           <div class="input-wrapper">
-                            <svg
-                              class="svg"
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <g opacity="0.3">
-                                <path
-                                  d="M20 12C20 10.897 19.103 10 18 10H17V7C17 4.243 14.757 2 12 2C9.243 2 7 4.243 7 7V10H6C4.897 10 4 10.897 4 12V20C4 21.103 4.897 22 6 22H18C19.103 22 20 21.103 20 20V12ZM9 7C9 5.346 10.346 4 12 4C13.654 4 15 5.346 15 7V10H9V7Z"
-                                  fill="#333333"
-                                />
-                              </g>
-                            </svg>
+                            <v-icon class="svg" right> mdi-lock </v-icon>
                             <input
-                              v-model="loginData.password"
+                              v-model="loginAdminData.password"
+                              class="input"
+                              placeholder="Password"
+                              type="password"
+                            />
+                          </div>
+                          <div class="btn-group">
+                            <button class="button" type="submit">Login</button>
+                            <a href="#"><p class="text">Forgot Password</p> </a>
+                          </div>
+                        </form>
+                      </v-card-text>
+                    </v-card>
+                  </v-tab-item>
+                  <v-tab-item>
+                    <v-card color="basil">
+                      <v-card-text>
+                        <form @submit.prevent="loginUserSubmit" class="form">
+                          <div class="input-wrapper">
+                            <v-icon class="svg" right>
+                              mdi-card-account-details-outline
+                            </v-icon>
+                            <input
+                              v-model="loginUserData.company_id"
+                              class="input"
+                              placeholder="Company ID"
+                              type="text"
+                            />
+                          </div>
+                          <div class="input-wrapper">
+                            <v-icon class="svg" right>
+                              mdi-account-check
+                            </v-icon>
+                            <input
+                              v-model="loginUserData.username"
+                              class="input"
+                              placeholder="Username"
+                              type="text"
+                            />
+                          </div>
+                          <div class="input-wrapper">
+                            <v-icon class="svg" right> mdi-lock </v-icon>
+                            <input
+                              v-model="loginUserData.password"
                               class="input"
                               placeholder="Password"
                               type="password"
@@ -123,22 +138,39 @@ export default {
     return {
       tab: null,
       items: ["Admin", "User"],
-      loginData: {
-        email: null,
+      loginAdminData: {
+        username: null,
+        password: null,
+      },
+      loginUserData: {
+        company_id: null,
+        username: null,
         password: null,
       },
     };
   },
   methods: {
-    loginSubmit() {
+    loginAdminSubmit() {
       axios
-        .post("http://localhost:5000/api/user/login/", {
-          email: this.loginData.email,
-          password: this.loginData.password,
-        })
+        .post("http://localhost:5000/api/admins/login/", this.loginAdminData)
         .then((res) => {
-          console.log("loginData", res);
-          this.$store.state.superUser = res.data.data;
+          console.log("loginAdminData", res);
+          this.$store.state.admin = res.data.data;
+          this.$store.state.token = res.data.token;
+          localStorage.setItem("token", res.data.token);
+          this.$router.push("/");
+          this.$root.$refs.App.sidebar = true;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    loginUserSubmit() {
+      axios
+        .post("http://localhost:5000/api/users/login/", this.loginUserData)
+        .then((res) => {
+          console.log("loginUserData", res);
+          this.$store.state.admin = res.data.data;
           this.$store.state.token = res.data.token;
           localStorage.setItem("token", res.data.token);
           this.$router.push("/");

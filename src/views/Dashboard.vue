@@ -11,7 +11,7 @@
             mt-1
           "
         >
-          <h3 class="m-0">Hello Mbappe👋🏼</h3>
+          <h3 class="m-0">Hello {{ admin.name }}👋🏼</h3>
           <div class="input-wrap">
             <img src="../assets/images/icon-search.svg" alt="" />
             <input type="text" class="bg-white" placeholder="Search" />
@@ -296,7 +296,7 @@ export default {
   },
   computed: {
     ...mapState({
-      newStaff: "superUser",
+      admin: "admin",
     }),
   },
   methods: {

@@ -10,7 +10,7 @@
             ><p class="text-login">Log in</p></router-link
           >
         </div>
-        <form @submit.prevent="loginSubmit" class="form">
+        <form @submit.prevent="registerSubmit" class="form">
           <div class="names-group">
             <div class="row">
               <div class="col-md-4">
@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="col-md-4">
-                <div class="label-input-wrapper">
+                <div v-if="position == 'admin'" class="label-input-wrapper">
                   <label for="first-name">Name*</label>
                   <input
                     class="form-input"
@@ -32,13 +32,31 @@
                     placeholder="Your name"
                   />
                 </div>
+                <div v-else class="label-input-wrapper">
+                  <label for="first-name">Name*</label>
+                  <input
+                    class="form-input"
+                    v-model="registerUserData.name"
+                    type="text"
+                    placeholder="Your name"
+                  />
+                </div>
               </div>
               <div class="col-md-4">
-                <div class="label-input-wrapper">
+                <div v-if="position == 'admin'" class="label-input-wrapper">
                   <label for="first-name">Username*</label>
                   <input
                     class="form-input"
                     v-model="registerAdminData.username"
+                    type="text"
+                    placeholder="Your username"
+                  />
+                </div>
+                <div v-else class="label-input-wrapper">
+                  <label for="first-name">Username*</label>
+                  <input
+                    class="form-input"
+                    v-model="registerUserData.username"
                     type="text"
                     placeholder="Your username"
                   />
@@ -48,7 +66,7 @@
 
             <div class="row mt-3">
               <div class="col-md-4">
-                <div class="label-input-wrapper">
+                <div v-if="position == 'admin'" class="label-input-wrapper">
                   <label for="first-name">Email*</label>
                   <input
                     class="form-input"
@@ -57,9 +75,18 @@
                     placeholder="Email"
                   />
                 </div>
+                <div v-else class="label-input-wrapper">
+                  <label for="first-name">Email*</label>
+                  <input
+                    class="form-input"
+                    v-model="registerUserData.email"
+                    type="email"
+                    placeholder="Email"
+                  />
+                </div>
               </div>
               <div class="col-md-4">
-                <div class="label-input-wrapper">
+                <div v-if="position == 'admin'" class="label-input-wrapper">
                   <label for="first-name">Password*</label>
                   <input
                     class="form-input"
@@ -68,13 +95,31 @@
                     placeholder="Password"
                   />
                 </div>
+                <div v-else class="label-input-wrapper">
+                  <label for="first-name">Password*</label>
+                  <input
+                    class="form-input"
+                    v-model="registerUserData.password"
+                    type="password"
+                    placeholder="Password"
+                  />
+                </div>
               </div>
               <div class="col-md-4">
-                <div class="label-input-wrapper">
+                <div v-if="position == 'admin'" class="label-input-wrapper">
                   <label for="first-name">Confirmation Password*</label>
                   <input
                     class="form-input"
                     v-model="registerAdminData.password_confirmation"
+                    type="password"
+                    placeholder="Password"
+                  />
+                </div>
+                <div v-else class="label-input-wrapper">
+                  <label for="first-name">Confirmation Password*</label>
+                  <input
+                    class="form-input"
+                    v-model="registerUserData.password_confirmation"
                     type="password"
                     placeholder="Password"
                   />
@@ -95,7 +140,7 @@
                     <label for="date">Company id*</label>
                     <input
                       class="form-input"
-                      v-model="registerAdminData.companyId"
+                      v-model="registerUserData.company_id"
                       type="text"
                       placeholder="Company id"
                     />
@@ -137,7 +182,7 @@ export default {
     return {
       position: "user",
       registerAdminData: {
-        name: null,
+        name: "",
         username: null,
         email: null,
         password: null,
@@ -145,42 +190,47 @@ export default {
         company_name: null,
       },
       registerUserData: {
+        name: null,
         username: null,
         email: null,
         password: null,
         password_confirmation: null,
         occupation: null,
-      }
+      },
     };
   },
   methods: {
-    loginSubmit() {
-      axios
-        .post("http://localhost:5000/api/admins/register/", {
-          name: this.registerAdminData.name,
-          username: this.registerAdminData.username,
-          email: this.registerAdminData.email,
-          password: this.registerAdminData.password,
-          password_confirmation: this.registerAdminData.password_confirmation,
-          company_name: this.registerAdminData.company_name,
-          occupation: this.registerAdminData.occupation,
-        })
-        .then((res) => {
-          console.log("admins", res);
-          this.registerAdminData.name = null;
-          this.registerAdminData.username = null;
-          this.registerAdminData.email = null;
-          this.registerAdminData.password = null;
-          this.registerAdminData.password_confirmation = null;
-          this.registerAdminData.company_name = null;
-          this.registerAdminData.occupation = null;
-          if (res.statusText == "OK") {
-            this.$router.push("/");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+    registerSubmit() {
+      if (this.position == "admin") {
+        axios
+          .post("http://localhost:5000/api/admins/register/", this.registerAdminData)
+          .then((res) => {
+            console.log("admins", res);
+            this.registerAdminData = {};
+
+            if (res.statusText == "OK") {
+              this.$router.push("/");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      } else {
+        axios
+          .post("http://localhost:5000/api/users/register/", this.registerUserData)
+          .then((res) => {
+            console.log("users", res);
+            this.registerUserData = {};
+
+            if (res.statusText == "OK") {
+              this.$router.push("/");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            console.log("userdata: ", this.registerUserData);
+          });
+      }
     },
   },
 };
