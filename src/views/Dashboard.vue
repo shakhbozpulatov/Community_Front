@@ -11,7 +11,7 @@
             mt-1
           "
         >
-          <h3 class="m-0">Hello {{ admin.name }}👋🏼</h3>
+          <h3 class="m-0">Hello {{ adminData.name }}👋🏼</h3>
           <div class="input-wrap">
             <img src="../assets/images/icon-search.svg" alt="" />
             <input type="text" class="bg-white" placeholder="Search" />
@@ -82,100 +82,14 @@
           ></v-data-table>
         </div>
       </div>
-      <v-btn color="red lighten-2" class="m-3" dark @click="dialog = true">
-        Add Stuff
-      </v-btn>
-
-      <!-- {{ newStaff }} -->
-    </template>
-    <template>
-      <v-row justify="center">
-        <v-dialog v-model="dialog" persistent max-width="600px">
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">Stuff information</span>
-            </v-card-title>
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      label="Legal first name*"
-                      required
-                      v-model="newStaffData.name"
-                    ></v-text-field>
-                  </v-col>
-
-                  <v-col cols="12" sm="6" md="6">
-                    <v-text-field
-                      label="Legal last name*"
-                      required
-                      v-model="newStaffData.surname"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="newStaffData.email"
-                      label="Email*"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      label="Password*"
-                      type="password"
-                      v-model="newStaffData.password"
-                      required
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6">
-                    <v-select
-                      v-model="newStaffData.occupation"
-                      :items="[
-                        'Full Stack Develeper',
-                        'Front End Develeper',
-                        'Back End Developer',
-                        'UI UX Designer',
-                        'Devops',
-                        'Project Manager',
-                      ]"
-                      label="Occupation*"
-                      required
-                    ></v-select>
-                  </v-col>
-                </v-row>
-              </v-container>
-              <small>*indicates required field</small>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="dialog = false">
-                Close
-              </v-btn>
-              <v-btn color="blue darken-1" text @click="postNewStaffData">
-                Save
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-      </v-row>
     </template>
   </div>
 </template>
 <script>
 import { mapState } from "vuex";
-import axios from "axios";
 export default {
   data() {
     return {
-      dialog: false,
-      newStaffData: {
-        name: "",
-        surname: "",
-        email: "",
-        password: "",
-        occupation: "",
-      },
       headerData: [
         {
           icon: require("../assets/images/all-member-icon.svg"),
@@ -294,43 +208,18 @@ export default {
       ],
     };
   },
+  created() {
+    if (localStorage.getItem("token") === null) {
+      this.$router.push("/login");
+    }
+  },
+  mounted() {
+    this.$store.dispatch("getAdminData");
+  },
   computed: {
     ...mapState({
-      admin: "admin",
+      adminData: "adminData",
     }),
-  },
-  methods: {
-    postNewStaffData() {
-      let token = localStorage.getItem("token");
-      console.log("token: ", token);
-      console.log("_id: ", this.newStaff);
-      axios
-        .post(
-          `http://localhost:5000/api/addstaff/${this.newStaff._id}`,
-          {
-            name: this.newStaffData.name,
-            surname: this.newStaffData.surname,
-            email: this.newStaffData.email,
-            password: this.newStaffData.password,
-            occupation: this.newStaffData.occupation,
-            // token: token,
-          },
-          {
-            headers: {
-              Authorization: token,
-            },
-          }
-        )
-        .then((res) => {
-          this.newStaff.staff.push(this.newStaffData);
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      // this.newStaffData = {};
-      this.dialog = false;
-    },
   },
 };
 </script>

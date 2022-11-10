@@ -155,8 +155,6 @@ export default {
         .post("http://localhost:5000/api/admins/login/", this.loginAdminData)
         .then((res) => {
           console.log("loginAdminData", res);
-          this.$store.state.admin = res.data.data;
-          this.$store.state.token = res.data.token;
           localStorage.setItem("token", res.data.token);
           this.$router.push("/");
           this.$root.$refs.App.sidebar = true;
@@ -170,8 +168,6 @@ export default {
         .post("http://localhost:5000/api/users/login/", this.loginUserData)
         .then((res) => {
           console.log("loginUserData", res);
-          this.$store.state.admin = res.data.data;
-          this.$store.state.token = res.data.token;
           localStorage.setItem("token", res.data.token);
           this.$router.push("/");
           this.$root.$refs.App.sidebar = true;
