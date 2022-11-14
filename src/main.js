@@ -9,10 +9,11 @@ import "vuetify/dist/vuetify.min.css";
 import Vuetify from "vuetify";
 import VueAnimateNumber from "vue-animate-number";
 import "vue-material-design-icons/styles.css";
-
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap-vue/dist/bootstrap-vue.css";
+import moment from 'moment'
 
+Vue.prototype.moment = moment
 Vue.use(BootstrapVue);
 Vue.use(IconsPlugin);
 Vue.use(Vuetify);

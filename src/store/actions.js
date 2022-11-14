@@ -1,4 +1,5 @@
 import axios from "axios";
+import router from "../router"
 
 const token = localStorage.getItem("token");
 export default {
@@ -16,6 +17,7 @@ export default {
       })
       .catch((err) => {
         console.log(err);
+        router.push("/login")
       });
   },
 };

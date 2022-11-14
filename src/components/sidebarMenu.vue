@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="sidebar px-3 py-6">
+    <div class="sidebar px-3 py-3">
       <v-list-item class="mb-6 pl-2">
         <div class="logo-wrap d-flex align-items-center">
           <img :src="logo" alt="" />

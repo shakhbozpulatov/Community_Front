@@ -180,6 +180,7 @@ import axios from "axios";
 export default {
   data() {
     return {
+      
       position: "user",
       registerAdminData: {
         name: "",
@@ -198,6 +199,9 @@ export default {
         occupation: null,
       },
     };
+  },
+  created() {
+    this.$root.$refs.App.sidebar = false;
   },
   methods: {
     registerSubmit() {
