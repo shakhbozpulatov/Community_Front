@@ -160,7 +160,7 @@
                       <option value="Graphic Designer">Graphic Designer</option>
                       <option value="SMM">SMM</option>
                       <option value="Marketolog">Marketolog</option>
-                      <option value="Marketolog">Devops</option>
+                      <option value="Devops">Devops</option>
                     </select>
                   </div>
                 </div>
@@ -180,7 +180,6 @@ import axios from "axios";
 export default {
   data() {
     return {
-      
       position: "user",
       registerAdminData: {
         name: "",

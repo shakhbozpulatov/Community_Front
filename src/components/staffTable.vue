@@ -2,20 +2,22 @@
   <div class="table-root">
     <div class="table-header d-flex align-items-center justify-content-between">
       <p class="table-title m-0">all staff</p>
-      <button type="button" class="btn btn-success">Create</button>
+      <v-btn @click="createDialog = true" tile color="success">
+        Create
+      </v-btn>
     </div>
     <div class="table-wrapper">
       <table class="table">
         <tr class="heading-row">
-          <th class="heading">Order ID</th>
-          <th class="heading">Order Name</th>
-          <th class="heading">Customer Name</th>
-          <th class="heading">Location</th>
-          <th class="heading">Order status</th>
+          <th class="heading">N</th>
+          <th class="heading">Name</th>
+          <th class="heading">Email</th>
+          <th class="heading">Occupation</th>
+          <th class="heading">Username</th>
           <th class="heading">Created time</th>
           <th class="heading"></th>
         </tr>
-        <tr v-for="(elem, index) in users" :key="index" class="data-row">
+        <tr v-for="(elem, index) in admin.staff" :key="index" class="data-row">
           <th class="table-data">{{ index + 1 }}</th>
           <td class="table-data">{{ elem.name }}</td>
           <td class="table-data">{{ elem.email }}</td>
@@ -26,7 +28,7 @@
           </td>
           <td class="table-data">
             <b-button
-              @click="openDialog(elem._id, index)"
+              @click="openDeleteDialog(elem._id, index)"
               rounded-4
               variant="outline-danger"
             >
@@ -38,27 +40,99 @@
     </div>
     <template>
       <v-row justify="center">
-        <v-dialog v-model="dialog" persistent max-width="290">
+        <v-dialog v-model="createDialog" persistent max-width="600px">
           <v-card>
-            <v-card-title class="text-h5">
-              Use Google's location service?
+            <v-card-title>
+              <span class="text-h5">Create New User</span>
             </v-card-title>
-            <v-card-text
-              >Let Google help apps determine location. This means sending
-              anonymous location data to Google, even when no apps are
-              running.</v-card-text
-            >
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="newUserData.name"
+                      label="Name*"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="newUserData.username"
+                      label="Username*"
+                      hint="example of helper text only on focus"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="newUserData.email"
+                      label="Email*"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="newUserData.password"
+                      label="Password*"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-text-field
+                      v-model="newUserData.password_confirmation"
+                      label="Confirmatin password*"
+                      type="password"
+                      required
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" md="6">
+                    <v-select
+                      v-model="newUserData.occupation"
+                      :items="[
+                        'Front Ender',
+                        'Back Ender',
+                        'Full Stack',
+                        'PM',
+                        'SMM',
+                        'Marketolog',
+                        'Devops',
+                        'Graphic Designer',
+                      ]"
+                      label="Occupation*"
+                      required
+                    ></v-select>
+                  </v-col>
+                </v-row>
+              </v-container>
+              <small>*indicates required field</small>
+            </v-card-text>
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red darken-1" text @click="dialog = false">
-                Disagree
+              <v-btn color="blue darken-1" text @click="createDialog = false">
+                Close
               </v-btn>
-              <v-btn
-                color="blue darken-1"
-                text
-                @click="deleteUser()"
-              >
-                Agree
+              <v-btn color="blue darken-1" text @click="createUser">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
+    </template>
+    <template>
+      <v-row justify="center">
+        <v-dialog v-model="deleteDialog" persistent max-width="350">
+          <v-card>
+            <v-card-title class="text-h6">
+              Are you sure delete the user?
+            </v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="red darken-1" text @click="deleteDialog = false">
+                No
+              </v-btn>
+              <v-btn color="green darken-1" text @click="deleteUser()">
+                Yes
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -70,20 +144,43 @@
 <script>
 import axios from "axios";
 export default {
-  props: ["users"],
+  props: ["admin"],
   data() {
     return {
       token: localStorage.getItem("token"),
-      dialog: false,
+      deleteDialog: false,
+      createDialog: false,
       index: null,
       userId: null,
+      newUserData: {
+        name: null,
+        username: null,
+        email: null,
+        password: null,
+        password_confirmation: null,
+        occupation: null,
+        company_id: this.admin.company_id,
+      },
     };
   },
   methods: {
-    openDialog(id, index) {
+    openDeleteDialog(id, index) {
       this.index = index;
       this.userId = id;
-      this.dialog = true;
+      this.deleteDialog = true;
+    },
+    createUser() {
+      axios
+        .post("http://localhost:5000/api/users/register/", this.newUserData)
+        .then((res) => {
+          console.log("User is created! ", res);
+          this.admin.staff.push(this.newUserData);
+          this.newUserData = {};
+          this.createDialog = false;
+        })
+        .catch((err) => {
+          console.log(`Oops! User is not created! Error:${err}`);
+        });
     },
     deleteUser() {
       if (this.userId) {
@@ -96,8 +193,8 @@ export default {
           })
           .then((res) => {
             console.log("deleted user: ", res);
-            this.users.splice(this.index, 1);
-            this.dialog = false;
+            this.admin.staff.splice(this.index, 1);
+            this.deleteDialog = false;
           })
           .catch((err) => {
             console.log(err);

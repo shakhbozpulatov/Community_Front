@@ -50,7 +50,7 @@
             </div>
           </div>
         </div>
-        <StaffTable v-if="adminData.role == 'admin'" :users="adminData.staff" />
+        <StaffTable v-if="adminData.role == 'admin'" :admin="adminData" />
       </div>
     </template>
   </div>
