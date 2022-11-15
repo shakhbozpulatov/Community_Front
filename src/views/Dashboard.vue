@@ -83,20 +83,20 @@ export default {
       ],
     };
   },
-  created() {
+  components: { StaffTable },
+  async created() {
+    await this.$store.dispatch("getAdminData");
     if (localStorage.getItem("token") === null) {
       this.$router.push("/login");
     }
   },
   mounted() {
-    this.$store.dispatch("getAdminData");
   },
   computed: {
     ...mapState({
       adminData: "adminData",
     }),
   },
-  components: { StaffTable },
 };
 </script>
 <style lang="scss" scoped>
@@ -135,7 +135,7 @@ export default {
     background: #ffffff;
     box-shadow: 0px 10px 60px rgba(226, 236, 249, 0.5);
     border-radius: 30px;
-    padding: 15px 25px;
+    padding: 5px;
     margin-top: 36px;
     .menu-item {
       border-radius: 30px;

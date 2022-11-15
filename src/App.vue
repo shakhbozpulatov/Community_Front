@@ -41,6 +41,7 @@ export default {
 #app {
   background: #81cdff27;
   font-family: "Poppins", sans-serif;
+  user-select: none;
 }
 .container {
   max-width: 1400px !important;
