@@ -2,14 +2,12 @@
   <div class="table-root">
     <div class="table-header d-flex align-items-center justify-content-between">
       <p class="table-title m-0">all staff</p>
-      <v-btn @click="createDialog = true" tile color="success">
-        Create
-      </v-btn>
+      <v-btn @click="createDialog = true" tile color="success"> Create </v-btn>
     </div>
     <div class="table-wrapper">
       <table class="table">
         <tr class="heading-row">
-          <th class="heading">N</th>
+          <th class="heading"></th>
           <th class="heading">Name</th>
           <th class="heading">Email</th>
           <th class="heading">Occupation</th>
@@ -26,7 +24,13 @@
           <td class="table-data">
             {{ moment(elem.date).format("DD/MM/yyyy") }}
           </td>
-          <td class="table-data">
+          <td class="table-data d-flex gap-2">
+            <b-button
+              @click="openEditDialog(elem, index)"
+              variant="outline-warning"
+            >
+              <b-icon icon="pencil"></b-icon>
+            </b-button>
             <b-button
               @click="openDeleteDialog(elem._id, index)"
               rounded-4
@@ -150,8 +154,10 @@ export default {
       token: localStorage.getItem("token"),
       deleteDialog: false,
       createDialog: false,
-      index: null,
+      indexArrElem: null,
+      isEdit: false,
       userId: null,
+      userData: {},
       newUserData: {
         name: null,
         username: null,
@@ -165,27 +171,56 @@ export default {
   },
   methods: {
     openDeleteDialog(id, index) {
-      this.index = index;
+      this.indexArrElem = index;
       this.userId = id;
       this.deleteDialog = true;
     },
+    openEditDialog(obj, index) {
+      this.indexArrElem = index;
+      this.newUserData = obj;
+      this.createDialog = true;
+      this.isEdit = true;
+    },
     createUser() {
-      axios
-        .post("http://localhost:5000/api/users/register/", this.newUserData)
-        .then((res) => {
-          console.log("User is created! ", res);
-          this.admin.staff.push(this.newUserData);
-          this.newUserData = {};
-          this.createDialog = false;
-        })
-        .catch((err) => {
-          console.log(`Oops! User is not created! Error:${err}`);
-        });
+      this.newUserData.company_id = this.admin.company_id;
+      if (!this.isEdit) {
+        axios
+          .post("http://localhost:5000/api/users/register/", this.newUserData)
+          .then((res) => {
+            console.log("User is created! ", res);
+            this.admin.staff.push(this.newUserData);
+            this.newUserData = {};
+            this.indexArrElem = null;
+            this.createDialog = false;
+          })
+          .catch((err) => {
+            console.log(`Oops! User is not created! Error:${err}`);
+          });
+      } else {
+        axios
+          .patch(
+            `http://localhost:5000/api/users/${this.newUserData._id}`,
+            this.newUserData,
+            {
+              headers: {
+                Authorization: this.token,
+                "x-auth-token": this.token,
+              },
+            }
+          )
+          .then((res) => {
+            console.log("updated ", res);
+            this.createDialog = false;
+          })
+          .catch((err) => {
+            console.log("Oops! Error:", err);
+          });
+      }
     },
     deleteUser() {
       if (this.userId) {
         axios
-          .delete(`http://localhost:5000/api/admins/${this.userId}`, {
+          .delete(`http://localhost:5000/api/users/${this.userId}`, {
             headers: {
               Authorization: this.token,
               "x-auth-token": this.token,
@@ -193,7 +228,7 @@ export default {
           })
           .then((res) => {
             console.log("deleted user: ", res);
-            this.admin.staff.splice(this.index, 1);
+            this.admin.staff.splice(this.indexArrElem, 1);
             this.deleteDialog = false;
           })
           .catch((err) => {
